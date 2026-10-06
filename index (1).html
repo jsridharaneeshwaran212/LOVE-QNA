@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>For You ❤️</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      text-align: center;
+      padding: 25px 15px;
+    }
+
+    .box {
+      background: white;
+      max-width: 420px;
+      margin: auto;
+      padding: 25px;
+      border-radius: 25px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.2);
+    }
+
+    h1 { color: #ff4d6d; }
+
+    #question {
+      font-size: 20px;
+      font-weight: bold;
+      margin: 25px 0;
+    }
+
+    button {
+      width: 90%;
+      padding: 13px;
+      margin: 7px;
+      border: none;
+      border-radius: 20px;
+      background: #ff4d6d;
+      color: white;
+      font-size: 16px;
+    }
+
+    #answersPage {
+      display: none;
+      text-align: left;
+    }
+
+    .answer {
+      background: #fff0f3;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 15px;
+    }
+
+    .small {
+      font-size: 13px;
+      color: #777;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="box">
+
+  <h1>💗 Just For You 💗</h1>
+
+  <div id="game">
+    <p>Honest-ah answer pannu 😏</p>
+
+    <div id="question"></div>
+    <div id="answers"></div>
+  </div>
+
+  <div id="answersPage">
+    <h2>💌 Their Answers</h2>
+    <div id="savedAnswers"></div>
+    <button onclick="backToGame()">Back ❤️</button>
+  </div>
+
+</div>
+
+<script>
+
+const questions = [
+  {
+    q: "Naan unakku naughty-ah text panninaa, un reaction enna? 😏",
+    a: ["Blush 🫣", "Naughty reply 🔥", "Call me 📱"]
+  },
+  {
+    q: "Namma rendu perum alone-ah irundha first move yaar pannuva? 👀",
+    a: ["Nee 😏", "Naan 🫣", "Both ❤️‍🔥"]
+  },
+  {
+    q: "Enna paatha unakku butterflies varuma? 🦋",
+    a: ["Yes ❤️", "Definitely 😏", "Too many 🔥"]
+  },
+  {
+    q: "Enakku unakku most attractive thing enna?",
+    a: ["Eyes 👀", "Smile 😌", "Voice 🔥"]
+  },
+  {
+    q: "Naan un pakkathula romba close-ah vandhaa? 🫣",
+    a: ["Blush 😳", "Smile 😏", "Come closer ❤️"]
+  },
+  {
+    q: "Unakku romantic hugs pidikkuma?",
+    a: ["Yes 🤗", "Very much ❤️", "Only from you 😏"]
+  },
+  {
+    q: "Namma chemistry-ku 1–10 rating evlo? 🔥",
+    a: ["8 😏", "10 ❤️‍🔥", "11 😌"]
+  },
+  {
+    q: "Naan unakku whisper panninaa enna aagum? 🫣",
+    a: ["Blush", "Speechless 😳", "Flirt back 😏"]
+  },
+  {
+    q: "Late-night-la en kooda pesuradhu pidikkuma? 🌙",
+    a: ["Yes ❤️", "Always 😌", "Only if it's naughty 😏"]
+  },
+  {
+    q: "Namma rendu perukkum perfect romantic place?",
+    a: ["Beach 🌊", "Rooftop 🌙", "Cozy place ❤️"]
+  }
+];
+
+let current = 0;
+let saved = JSON.parse(localStorage.getItem("loverAnswers")) || [];
+
+function showQuestion() {
+
+  if (current >= questions.length) {
+    document.getElementById("game").innerHTML = `
+      <h2>Done! 😍❤️</h2>
+      <p>Thanks for answering!</p>
+      <button onclick="showSavedAnswers()">View Answers 💌</button>
+    `;
+    return;
+  }
+
+  document.getElementById("question").innerHTML =
+    questions[current].q;
+
+  let html = "";
+
+  questions[current].a.forEach(function(answer) {
+    html += `<button onclick="saveAnswer('${answer.replace(/'/g, "\\'")}')">
+              ${answer}
+             </button>`;
+  });
+
+  document.getElementById("answers").innerHTML = html;
+}
+
+function saveAnswer(answer) {
+
+  saved.push({
+    question: questions[current].q,
+    answer: answer,
+    time: new Date().toLocaleString()
+  });
+
+  localStorage.setItem("loverAnswers", JSON.stringify(saved));
+
+  current++;
+  showQuestion();
+}
+
+function showSavedAnswers() {
+
+  document.getElementById("game").style.display = "none";
+  document.getElementById("answersPage").style.display = "block";
+
+  let html = "";
+
+  saved.forEach(function(item, index) {
+    html += `
+      <div class="answer">
+        <b>${index + 1}. ${item.question}</b>
+        <br>
+        ❤️ Answer: ${item.answer}
+        <div class="small">${item.time}</div>
+      </div>
+    `;
+  });
+
+  document.getElementById("savedAnswers").innerHTML =
+    html || "No answers yet 😅";
+}
+
+function backToGame() {
+  document.getElementById("answersPage").style.display = "none";
+  document.getElementById("game").style.display = "block";
+}
+
+showQuestion();
+
+</script>
+
+</body>
+</html>
